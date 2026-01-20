@@ -1,0 +1,19 @@
+DEBUT_PROG
+
+DECLARER A[3] : TAB DE ENTIER;
+DECLARER i : ENTIER;
+DECLARER x : ENTIER;
+
+i := 0;
+
+TANT_QUE (i < 3) FAIRE {
+    LIRE(A[i]);
+    SI (A[i] >= 10) ALORS {
+        x := A[i];
+    }
+    FIN_SI
+    i := i + 1;
+}
+FIN_TQ
+
+FIN_PROG

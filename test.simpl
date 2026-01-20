@@ -1,0 +1,155 @@
+DEBUT_PROG
+
+## Déclaration de variables simples
+DECLARER x, y, z : ENTIER ;
+DECLARER resultat, moyenne : REEL ;
+DECLARER actif : BOOL ;
+DECLARER lettre : CHAR ;
+
+## Déclaration de tableaux
+DECLARER notes[10] : TAB DE ENTIER ;
+DECLARER moyennes[5] : TAB DE REEL ;
+
+## Affectations simples
+x := 10 ;
+y := 5 ;
+z := 0 ;
+resultat := 15.5 ;
+lettre := 'A' ;
+actif := VRAI ;
+
+## Opérations arithmétiques
+z := x + y ;
+z := x - y ;
+z := x * y ;
+z := x / y ;
+z := x % y ;
+z := x ^ 2 ;
+
+resultat := x + y * 2 ;
+moyenne := (x + y) / 2 ;
+
+## Affectations de tableaux
+notes[0] := 15 ;
+notes[1] := 18 ;
+notes[2] := 12 ;
+
+## Lecture
+LIRE(x) ;
+LIRE(notes[0]) ;
+
+## Affichage
+AFFICHER("Programme de test complet") ;
+AFFICHER("Valeur de x : ") ;
+AFFICHER(x) ;
+AFFICHER(resultat) ;
+
+## Structure conditionnelle SI-ALORS
+SI (x > y) ALORS {
+    AFFICHER("x est plus grand que y") ;
+    z := x ;
+}
+FIN_SI
+
+## Structure conditionnelle SI-ALORS-SINON
+SI (x >= 10) ALORS {
+    AFFICHER("x est supérieur ou égal à 10") ;
+    actif := VRAI ;
+} SINON {
+    AFFICHER("x est inférieur à 10") ;
+    actif := FAUX ;
+}
+FIN_SI
+
+## Conditions avec opérateurs logiques
+SI (x > 5) ALORS {
+    AFFICHER("Condition ET vérifiée") ;
+}
+FIN_SI
+
+SI (x == 10 OU y == 5) ALORS {
+    AFFICHER("Condition OU vérifiée") ;
+}
+FIN_SI
+
+SI (NON actif) ALORS {
+    AFFICHER("actif est faux") ;
+}
+FIN_SI
+
+## Comparaisons
+SI (x == y) ALORS {
+    AFFICHER("x égal y") ;
+}
+FIN_SI
+
+SI (x != y) ALORS {
+    AFFICHER("x différent de y") ;
+}
+FIN_SI
+
+SI (x < y) ALORS {
+    AFFICHER("x inférieur à y") ;
+}
+FIN_SI
+
+SI (x <= y) ALORS {
+    AFFICHER("x inférieur ou égal à y") ;
+}
+FIN_SI
+
+## Boucle TANT_QUE
+z := 0 ;
+TANT_QUE (z < 5) FAIRE {
+    AFFICHER(z) ;
+    z := z + 1 ;
+}
+FIN_TQ
+
+## Boucle POUR
+POUR (z := 1; z <= 10; z := z + 1) FAIRE {
+    notes[z] := z * 2 ;
+    AFFICHER(notes[z]) ;
+}
+FIN_POUR
+
+## Boucle POUR avec condition complexe
+POUR (z := 0; z < 10; z := z + 2) FAIRE {
+    SI (z > 5) ALORS {
+        AFFICHER("z est grand") ;
+    }
+    FIN_SI
+}
+FIN_POUR
+
+## Tableaux avec indices calculés
+z := 3 ;
+notes[z] := 20 ;
+AFFICHER(notes[z]) ;
+
+x := notes[0] + notes[1] ;
+
+## Structures imbriquées
+SI (x > 10) ALORS {
+    TANT_QUE (y < 10) FAIRE {
+        y := y + 1 ;
+        SI (y == 5) ALORS {
+            AFFICHER("y vaut 5") ;
+        }
+        FIN_SI
+    }
+    FIN_TQ
+}
+FIN_SI
+
+## Expressions complexes
+resultat := (x + y) * z / 2 + notes[0] ;
+moyenne := (notes[0] + notes[1] + notes[2]) / 3 ;
+
+## Puissance
+z := 2 ^ 3 ;
+resultat := x ^ 2 + y ^ 2 ;
+
+AFFICHER("Fin du programme") ;
+
+FIN_PROG

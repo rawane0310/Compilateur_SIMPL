@@ -1,0 +1,56 @@
+# =========================
+# Exécutables
+# =========================
+*.exe
+*.out
+*.app
+
+# =========================
+# Fichiers objets et temporaires C/C++
+# =========================
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.dylib
+
+# =========================
+# Fichiers générés par Flex / Lex
+# =========================
+lex.yy.c
+lex.yy.cpp
+
+# =========================
+# Fichiers générés par Bison / Yacc
+# =========================
+y.tab.c
+y.tab.h
+y.output
+parser.c
+parser.h
+
+# =========================
+# Fichiers temporaires
+# =========================
+*.tmp
+*.log
+*.bak
+*.swp
+*.swo
+
+# =========================
+# Dossiers de build
+# =========================
+build/
+bin/
+dist/
+
+# =========================
+# Fichiers IDE / OS
+# =========================
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
