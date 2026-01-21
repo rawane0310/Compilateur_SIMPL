@@ -6,12 +6,9 @@ DECLARER x : ENTIER;
 
 i := 0;
 
-TANT_QUE (i < 3) FAIRE {
-    LIRE(A[i]);
-    SI (A[i] >= 10) ALORS {
-        x := A[i];
-    }
-    FIN_SI
+TANT_QUE  (i < 3) FAIRE {
+    
+    
     i := i + 1;
 }
 FIN_TQ
