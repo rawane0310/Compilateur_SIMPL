@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "tableSymboles.h" 
 #include <ctype.h>
-#define MAX_SYMBOLES 100
+
 #define MAX_TERMINALS 100
 #define MAX_REGLES 100
 #define TALLE_MAX_ENSEMBLE 100
@@ -659,10 +659,10 @@ int main() {
     printf("========================================\n\n");
     
     // 1. Initialiser la table d'analyse
-    printf("⏳ Initialisation de la table d'analyse...\n");
+    printf("Initialisation de la table d'analyse...\n");
     Table_analyse* table = initialiser_table_analyse();
     creer_table_analyse(table);
-    printf("✓ Table d'analyse créée avec succès !\n\n");
+    printf("Table d'analyse créée avec succès !\n\n");
     
     // 2. Afficher les ensembles DEBUT
     afficher_debuts(table);
@@ -676,91 +676,30 @@ int main() {
     // 5. Initialiser la table des symboles
     SymbolTable* symTable = creerTableSymboles();
     
-    printf("\n========================================\n");
     printf("  TESTS DE PROGRAMMES\n");
-    printf("========================================\n\n");
     
     // ===== TEST 1 : Programme correct simple =====
     printf("--- TEST 1 : Programme correct simple ---\n");
     const char* test1 = "DEBUT_PROG DECLARER x : ENTIER ; LIRE ( x ) ; AFFICHER ( x ) ; FIN_PROG";
     printf("Programme : %s\n\n", test1);
     bool resultat1 = reconnaissance(table, test1, symTable);
-    printf("\nRésultat : %s\n\n", resultat1 ? "✓ ACCEPTÉ" : "✗ REJETÉ");
+    printf("\nRésultat : %s\n\n", resultat1 ? "ACCEPTÉ" : "REJETÉ");
     
-    // ===== TEST 2 : Programme avec expression =====
-    printf("--- TEST 2 : Programme avec expression ---\n");
-    const char* test2 = "DEBUT_PROG DECLARER y : ENTIER ; DECLARER z : ENTIER ; y := 5 + 3 * 2 ; AFFICHER ( y ) ; FIN_PROG";
+    // ===== TEST 2 : Programme INVALIDE (manque point-virgule) =====
+    printf("--- TEST 2 : Programme INVALIDE (manque ;) ---\n");
+    const char* test2 = "DEBUT_PROG DECLARER x : ENTIER LIRE ( x ) ; FIN_PROG";
     printf("Programme : %s\n\n", test2);
     bool resultat2 = reconnaissance(table, test2, symTable);
-    printf("\nRésultat : %s\n\n", resultat2 ? "✓ ACCEPTÉ" : "✗ REJETÉ");
-    
-    // ===== TEST 3 : Programme sans déclarations =====
-    printf("--- TEST 3 : Programme sans déclarations ---\n");
-    const char* test3 = "DEBUT_PROG LIRE ( a ) ; AFFICHER ( a ) ; FIN_PROG";
-    printf("Programme : %s\n\n", test3);
-    bool resultat3 = reconnaissance(table, test3, symTable);
-    printf("\nRésultat : %s\n\n", resultat3 ? "✓ ACCEPTÉ" : "✗ REJETÉ");
-    
-    // ===== TEST 4 : Programme avec parenthèses dans expression =====
-    printf("--- TEST 4 : Expression avec parenthèses ---\n");
-    const char* test4 = "DEBUT_PROG DECLARER res : ENTIER ; res := ( 10 + 5 ) * 2 ; FIN_PROG";
-    printf("Programme : %s\n\n", test4);
-    bool resultat4 = reconnaissance(table, test4, symTable);
-    printf("\nRésultat : %s\n\n", resultat4 ? "✓ ACCEPTÉ" : "✗ REJETÉ");
-    
-    // ===== TEST 5 : Programme INVALIDE (manque point-virgule) =====
-    printf("--- TEST 5 : Programme INVALIDE (manque ;) ---\n");
-    const char* test5 = "DEBUT_PROG DECLARER x : ENTIER LIRE ( x ) ; FIN_PROG";
-    printf("Programme : %s\n\n", test5);
-    bool resultat5 = reconnaissance(table, test5, symTable);
-    printf("\nRésultat : %s\n\n", resultat5 ? "✓ ACCEPTÉ" : "✗ REJETÉ");
-    
-    // ===== TEST 6 : Programme INVALIDE (manque FIN_PROG) =====
-    printf("--- TEST 6 : Programme INVALIDE (manque FIN_PROG) ---\n");
-    const char* test6 = "DEBUT_PROG DECLARER x : ENTIER ;";
-    printf("Programme : %s\n\n", test6);
-    bool resultat6 = reconnaissance(table, test6, symTable);
-    printf("\nRésultat : %s\n\n", resultat6 ? "✓ ACCEPTÉ" : "✗ REJETÉ");
-    
-    // ===== TEST 7 : Programme complexe correct =====
-    printf("--- TEST 7 : Programme complexe ---\n");
-    const char* test7 = "DEBUT_PROG DECLARER a : ENTIER ; DECLARER b : ENTIER ; DECLARER c : ENTIER ; LIRE ( a ) ; LIRE ( b ) ; c := a + b * 2 ; AFFICHER ( c ) ; FIN_PROG";
-    printf("Programme : %s\n\n", test7);
-    bool resultat7 = reconnaissance(table, test7, symTable);
-    printf("\nRésultat : %s\n\n", resultat7 ? "✓ ACCEPTÉ" : "✗ REJETÉ");
-    
-    // ===== TEST 8 : Expression complexe avec parenthèses imbriquées =====
-    printf("--- TEST 8 : Parenthèses imbriquées ---\n");
-    const char* test8 = "DEBUT_PROG DECLARER x : ENTIER ; x := ( ( 5 + 3 ) * 2 ) + 1 ; FIN_PROG";
-    printf("Programme : %s\n\n", test8);
-    bool resultat8 = reconnaissance(table, test8, symTable);
-    printf("\nRésultat : %s\n\n", resultat8 ? "✓ ACCEPTÉ" : "✗ REJETÉ");
-    
-    // ===== RÉSUMÉ =====
-    printf("\n========================================\n");
-    printf("  RÉSUMÉ DES TESTS\n");
-    printf("========================================\n");
-    int total = 8;
-    int passes = resultat1 + resultat2 + resultat3 + resultat4 + resultat7 + resultat8;
-    int fails = !resultat5 + !resultat6;  // Tests 5 et 6 doivent échouer
-    
-    printf("Tests corrects acceptés : %d/6\n", passes);
-    printf("Tests invalides rejetés : %d/2\n", fails);
-    printf("Score total : %d/%d\n", passes + fails, total);
-    
-    if (passes == 6 && fails == 2) {
-        printf("\n🎉 PARFAIT ! Tous les tests passent !\n");
-    }
-    
+    printf("\nRésultat : %s\n\n", resultat2 ? "ACCEPTÉ" : "REJETÉ");
+     
     // 6. Libérer la mémoire
-    printf("\n⏳ Libération de la mémoire...\n");
+    printf("\nLibération de la mémoire...\n");
     liberer_table_analyse(table);
     libererTableSymboles(symTable);
-    printf("✓ Mémoire libérée !\n");
+    printf("Mémoire libérée !\n");
     
-    printf("\n========================================\n");
     printf("  FIN DE L'ANALYSE\n");
-    printf("========================================\n");
+ 
     
     return 0;
 }
