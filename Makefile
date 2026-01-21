@@ -12,9 +12,10 @@ all:
 	@echo "Compilation terminee! Executable: simpl_compiler"
 
 test: all
-	./simpl_compiler test.simpl
+	./simpl_compiler test1.simpl
 
 clean:
 	rm -f *.o parser.tab.c parser.tab.h lex.yy.c simpl_compiler
+
 
 .PHONY: all test clean
