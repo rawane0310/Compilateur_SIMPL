@@ -61,6 +61,19 @@ int is_declared(char* name) {
     return 1;
 }
 
+int is_initialized(char* name) {
+    SymbolEntry* sym = find_symbol(name);
+    if(!sym) return 0;
+    
+    if(!sym->is_initialized) {
+        char error_msg[200];
+        sprintf(error_msg, "Variable '%s' utilisée avant initialisation", name);
+        yyerror(error_msg);
+        return 0;
+    }
+    return 1;
+}
+
 // Marquer comme initialisée
 void mark_initialized(char* name) {
     SymbolEntry* sym = find_symbol(name);

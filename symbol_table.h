@@ -32,6 +32,9 @@ SymbolEntry* find_symbol(char* name);
 // Vérifier si variable déclarée
 int is_declared(char* name);
 
+// Vérifier si variable initialisée
+int is_initialized(char* name);
+
 // Marquer comme initialisée
 void mark_initialized(char* name);
 

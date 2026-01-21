@@ -592,11 +592,11 @@ static const yytype_int16 yyrline[] =
 {
        0,    78,    78,    78,    87,    89,    93,   101,   114,   117,
      123,   124,   125,   126,   130,   132,   136,   137,   138,   139,
-     140,   141,   146,   168,   205,   216,   244,   248,   256,   256,
-     280,   285,   285,   297,   302,   297,   341,   346,   341,   369,
-     374,   385,   396,   407,   418,   429,   440,   444,   453,   480,
-     491,   502,   513,   521,   533,   544,   555,   566,   572,   578,
-     584,   595,   606,   617,   625,   633
+     140,   141,   146,   168,   207,   218,   248,   252,   260,   260,
+     284,   289,   289,   301,   306,   301,   345,   350,   345,   373,
+     378,   389,   400,   411,   422,   433,   444,   448,   462,   494,
+     505,   516,   527,   535,   547,   558,   569,   580,   586,   592,
+     598,   609,   620,   631,   639,   647
 };
 #endif
 
@@ -1405,14 +1405,16 @@ yyreduce:
         insererQuadruplet("+", (yyvsp[-5].chaine), (yyvsp[-3].expr_info).addr, temp);
         insererQuadruplet("[]=", (yyvsp[0].expr_info).addr, "", temp);
         
+        mark_initialized((yyvsp[-5].chaine));
+        
         printf("[SEMANTIQUE] Affectation tableau: %s[%s] := %s\n", 
                (yyvsp[-5].chaine), (yyvsp[-3].expr_info).addr, (yyvsp[0].expr_info).addr);
     }
-#line 1412 "parser.tab.c"
+#line 1414 "parser.tab.c"
     break;
 
   case 24: /* lecture: MC_LIRE PAR_OUV IDENTIFICATEUR PAR_FERM SEPARATEUR  */
-#line 205 "parser.y"
+#line 207 "parser.y"
                                                        {
         if(!is_declared((yyvsp[-2].chaine))) {
             YYABORT;
@@ -1423,11 +1425,11 @@ yyreduce:
         
         printf("[LOG] Lecture: LIRE(%s)\n", (yyvsp[-2].chaine));
     }
-#line 1427 "parser.tab.c"
+#line 1429 "parser.tab.c"
     break;
 
   case 25: /* lecture: MC_LIRE PAR_OUV IDENTIFICATEUR CROCH_OUV expression CROCH_FERM PAR_FERM SEPARATEUR  */
-#line 216 "parser.y"
+#line 218 "parser.y"
                                                                                          {
         if(!is_declared((yyvsp[-5].chaine))) {
             YYABORT;
@@ -1450,31 +1452,33 @@ yyreduce:
         insererQuadruplet("+", (yyvsp[-5].chaine), (yyvsp[-3].expr_info).addr, temp);
         insererQuadruplet("READ", "", "", temp);
         
+        mark_initialized((yyvsp[-5].chaine));
+        
         printf("[LOG] Lecture tableau: LIRE(%s[%s])\n", (yyvsp[-5].chaine), (yyvsp[-3].expr_info).addr);
     }
-#line 1456 "parser.tab.c"
+#line 1460 "parser.tab.c"
     break;
 
   case 26: /* affichage: MC_AFFICHER PAR_OUV expression PAR_FERM SEPARATEUR  */
-#line 244 "parser.y"
+#line 248 "parser.y"
                                                        {
         insererQuadruplet("WRITE", (yyvsp[-2].expr_info).addr, "", "");
         printf("[LOG] Affichage de %s (type %s)\n", (yyvsp[-2].expr_info).addr, (yyvsp[-2].expr_info).type);
     }
-#line 1465 "parser.tab.c"
+#line 1469 "parser.tab.c"
     break;
 
   case 27: /* affichage: MC_AFFICHER PAR_OUV CONST_STRING PAR_FERM SEPARATEUR  */
-#line 248 "parser.y"
+#line 252 "parser.y"
                                                            {
         insererQuadruplet("WRITE", (yyvsp[-2].chaine), "", "");
         printf("[LOG] Affichage de chaîne: %s\n", (yyvsp[-2].chaine));
     }
-#line 1474 "parser.tab.c"
+#line 1478 "parser.tab.c"
     break;
 
   case 28: /* $@2: %empty  */
-#line 256 "parser.y"
+#line 260 "parser.y"
                                      {
         if(strcmp((yyvsp[-1].expr_info).type, "BOOL") != 0) {
             yyerror("La condition doit être de type BOOL");
@@ -1490,11 +1494,11 @@ yyreduce:
         push_label(label_else);
         
     }
-#line 1494 "parser.tab.c"
+#line 1498 "parser.tab.c"
     break;
 
   case 29: /* condition: MC_SI PAR_OUV bool_expr PAR_FERM $@2 MC_ALORS bloc_instructions parties_sinon MC_FIN_SI  */
-#line 270 "parser.y"
+#line 274 "parser.y"
                                                          {
         char* label_fin = label_stack.labels[label_stack.top - 1];
         insererQuadruplet("", label_fin, "", "");
@@ -1502,20 +1506,20 @@ yyreduce:
         pop_label();
         pop_label();
     }
-#line 1506 "parser.tab.c"
+#line 1510 "parser.tab.c"
     break;
 
   case 30: /* parties_sinon: %empty  */
-#line 280 "parser.y"
+#line 284 "parser.y"
                {
         char* label_else = peek_label();
         insererQuadruplet("", label_else, "", "");
     }
-#line 1515 "parser.tab.c"
+#line 1519 "parser.tab.c"
     break;
 
   case 31: /* $@3: %empty  */
-#line 285 "parser.y"
+#line 289 "parser.y"
                {
         char* label_fin = label_stack.labels[label_stack.top - 1];
         insererQuadruplet("BR", "", "", label_fin);
@@ -1524,22 +1528,22 @@ yyreduce:
         insererQuadruplet("", label_else, "", "");
         
     }
-#line 1528 "parser.tab.c"
+#line 1532 "parser.tab.c"
     break;
 
   case 33: /* $@4: %empty  */
-#line 297 "parser.y"
+#line 301 "parser.y"
                                            {
         char* label_test = new_label();
         insererQuadruplet("", label_test, "", "");
         push_label(label_test);
         
     }
-#line 1539 "parser.tab.c"
+#line 1543 "parser.tab.c"
     break;
 
   case 34: /* $@5: %empty  */
-#line 302 "parser.y"
+#line 306 "parser.y"
                                                 {
         if(strcmp((yyvsp[-3].expr_info).type, "BOOL") != 0) {
             yyerror("La condition de POUR doit être de type BOOL");
@@ -1566,11 +1570,11 @@ yyreduce:
         insererQuadruplet("", label_corps_final, "", "");
         
     }
-#line 1570 "parser.tab.c"
+#line 1574 "parser.tab.c"
     break;
 
   case 35: /* boucle_pour: MC_POUR PAR_OUV affectation SEPARATEUR $@4 bool_expr SEPARATEUR affectation PAR_FERM $@5 MC_FAIRE bloc_instructions MC_FIN_POUR  */
-#line 327 "parser.y"
+#line 331 "parser.y"
                                              {
         char* label_incr = label_stack.labels[label_stack.top - 1];
         insererQuadruplet("BR", "", "", label_incr);
@@ -1581,22 +1585,22 @@ yyreduce:
         pop_label();
         pop_label();
     }
-#line 1585 "parser.tab.c"
+#line 1589 "parser.tab.c"
     break;
 
   case 36: /* $@6: %empty  */
-#line 341 "parser.y"
+#line 345 "parser.y"
                 {
         char* label_test = new_label();
         insererQuadruplet("", label_test, "", "");
         push_label(label_test);
         
     }
-#line 1596 "parser.tab.c"
+#line 1600 "parser.tab.c"
     break;
 
   case 37: /* $@7: %empty  */
-#line 346 "parser.y"
+#line 350 "parser.y"
                                  {
         if(strcmp((yyvsp[-1].expr_info).type, "BOOL") != 0) {
             yyerror("La condition de TANT_QUE doit être BOOL");
@@ -1608,11 +1612,11 @@ yyreduce:
         push_label(label_fin);
         
     }
-#line 1612 "parser.tab.c"
+#line 1616 "parser.tab.c"
     break;
 
   case 38: /* boucle_tant_que: MC_TANT_QUE $@6 PAR_OUV bool_expr PAR_FERM $@7 MC_FAIRE bloc_instructions MC_FIN_TQ  */
-#line 356 "parser.y"
+#line 360 "parser.y"
                                            {
         char* label_test = label_stack.labels[label_stack.top - 1];
         insererQuadruplet("BR", "", "", label_test);
@@ -1622,11 +1626,11 @@ yyreduce:
         
         pop_label();
     }
-#line 1626 "parser.tab.c"
+#line 1630 "parser.tab.c"
     break;
 
   case 40: /* expression: expression OP_PLUS expression  */
-#line 374 "parser.y"
+#line 378 "parser.y"
                                   {
         if(!is_numeric((yyvsp[-2].expr_info).type) || !is_numeric((yyvsp[0].expr_info).type)) {
             yyerror("Opération + sur types non numériques");
@@ -1637,11 +1641,11 @@ yyreduce:
         (yyval.expr_info).type = result_type((yyvsp[-2].expr_info).type, (yyvsp[0].expr_info).type);
         insererQuadruplet("+", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1641 "parser.tab.c"
+#line 1645 "parser.tab.c"
     break;
 
   case 41: /* expression: expression OP_MOINS expression  */
-#line 385 "parser.y"
+#line 389 "parser.y"
                                      {
         if(!is_numeric((yyvsp[-2].expr_info).type) || !is_numeric((yyvsp[0].expr_info).type)) {
             yyerror("Opération - sur types non numériques");
@@ -1652,11 +1656,11 @@ yyreduce:
         (yyval.expr_info).type = result_type((yyvsp[-2].expr_info).type, (yyvsp[0].expr_info).type);
         insererQuadruplet("-", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1656 "parser.tab.c"
+#line 1660 "parser.tab.c"
     break;
 
   case 42: /* expression: expression OP_MULT expression  */
-#line 396 "parser.y"
+#line 400 "parser.y"
                                     {
         if(!is_numeric((yyvsp[-2].expr_info).type) || !is_numeric((yyvsp[0].expr_info).type)) {
             yyerror("Opération * sur types non numériques");
@@ -1667,11 +1671,11 @@ yyreduce:
         (yyval.expr_info).type = result_type((yyvsp[-2].expr_info).type, (yyvsp[0].expr_info).type);
         insererQuadruplet("*", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1671 "parser.tab.c"
+#line 1675 "parser.tab.c"
     break;
 
   case 43: /* expression: expression OP_DIV expression  */
-#line 407 "parser.y"
+#line 411 "parser.y"
                                    {
         if(!is_numeric((yyvsp[-2].expr_info).type) || !is_numeric((yyvsp[0].expr_info).type)) {
             yyerror("Opération / sur types non numériques");
@@ -1682,11 +1686,11 @@ yyreduce:
         (yyval.expr_info).type = result_type((yyvsp[-2].expr_info).type, (yyvsp[0].expr_info).type);
         insererQuadruplet("/", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1686 "parser.tab.c"
+#line 1690 "parser.tab.c"
     break;
 
   case 44: /* expression: expression OP_MOD expression  */
-#line 418 "parser.y"
+#line 422 "parser.y"
                                    {
         if(strcmp((yyvsp[-2].expr_info).type, "ENTIER") != 0 || strcmp((yyvsp[0].expr_info).type, "ENTIER") != 0) {
             yyerror("Opération % réservée aux ENTIER");
@@ -1697,11 +1701,11 @@ yyreduce:
         (yyval.expr_info).type = strdup("ENTIER");
         insererQuadruplet("%", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1701 "parser.tab.c"
+#line 1705 "parser.tab.c"
     break;
 
   case 45: /* expression: expression OP_PUISS expression  */
-#line 429 "parser.y"
+#line 433 "parser.y"
                                      {
         if(!is_numeric((yyvsp[-2].expr_info).type) || !is_numeric((yyvsp[0].expr_info).type)) {
             yyerror("Opération ^ sur types non numériques");
@@ -1712,32 +1716,37 @@ yyreduce:
         (yyval.expr_info).type = result_type((yyvsp[-2].expr_info).type, (yyvsp[0].expr_info).type);
         insererQuadruplet("^", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1716 "parser.tab.c"
+#line 1720 "parser.tab.c"
     break;
 
   case 46: /* expression: PAR_OUV expression PAR_FERM  */
-#line 440 "parser.y"
+#line 444 "parser.y"
                                   {
         (yyval.expr_info) = (yyvsp[-1].expr_info);
     }
-#line 1724 "parser.tab.c"
+#line 1728 "parser.tab.c"
     break;
 
   case 47: /* expression: IDENTIFICATEUR  */
-#line 444 "parser.y"
+#line 448 "parser.y"
                      {
         if(!is_declared((yyvsp[0].chaine))) {
+            YYABORT;
+        }
+        
+        /* ===== VÉRIFICATION D'INITIALISATION ===== */
+        if(!is_initialized((yyvsp[0].chaine))) {
             YYABORT;
         }
         
         (yyval.expr_info).addr = (yyvsp[0].chaine);
         (yyval.expr_info).type = strdup(get_type((yyvsp[0].chaine)));
     }
-#line 1737 "parser.tab.c"
+#line 1746 "parser.tab.c"
     break;
 
   case 48: /* expression: IDENTIFICATEUR CROCH_OUV expression CROCH_FERM  */
-#line 453 "parser.y"
+#line 462 "parser.y"
                                                      {
         if(!is_declared((yyvsp[-3].chaine))) {
             YYABORT;
@@ -1756,6 +1765,11 @@ yyreduce:
             YYABORT;
         }
         
+        /* ===== VÉRIFICATION D'INITIALISATION DU TABLEAU ===== */
+        if(!is_initialized((yyvsp[-3].chaine))) {
+            YYABORT;
+        }
+        
         char* temp1 = new_temp();
         char* temp2 = new_temp();
         insererQuadruplet("+", (yyvsp[-3].chaine), (yyvsp[-1].expr_info).addr, temp1);
@@ -1764,11 +1778,11 @@ yyreduce:
         (yyval.expr_info).addr = temp2;
         (yyval.expr_info).type = strdup(get_type((yyvsp[-3].chaine)));
     }
-#line 1768 "parser.tab.c"
+#line 1782 "parser.tab.c"
     break;
 
   case 49: /* expression: CONST_ENTIER  */
-#line 480 "parser.y"
+#line 494 "parser.y"
                    {
         char* temp = new_temp();
         char val[20];
@@ -1779,11 +1793,11 @@ yyreduce:
         (yyval.expr_info).addr = temp;
         (yyval.expr_info).type = strdup("ENTIER");
     }
-#line 1783 "parser.tab.c"
+#line 1797 "parser.tab.c"
     break;
 
   case 50: /* expression: CONST_REEL  */
-#line 491 "parser.y"
+#line 505 "parser.y"
                  {
         char* temp = new_temp();
         char val[20];
@@ -1794,11 +1808,11 @@ yyreduce:
         (yyval.expr_info).addr = temp;
         (yyval.expr_info).type = strdup("REEL");
     }
-#line 1798 "parser.tab.c"
+#line 1812 "parser.tab.c"
     break;
 
   case 51: /* expression: CONST_CHAR  */
-#line 502 "parser.y"
+#line 516 "parser.y"
                  {
         char* temp = new_temp();
         char val[20];
@@ -1809,11 +1823,11 @@ yyreduce:
         (yyval.expr_info).addr = temp;
         (yyval.expr_info).type = strdup("CHAR");
     }
-#line 1813 "parser.tab.c"
+#line 1827 "parser.tab.c"
     break;
 
   case 52: /* expression: BOOL_VRAI  */
-#line 513 "parser.y"
+#line 527 "parser.y"
                 {
         char* temp = new_temp();
         insererQuadruplet(":=", "true", "", temp);
@@ -1821,11 +1835,11 @@ yyreduce:
         (yyval.expr_info).addr = temp;
         (yyval.expr_info).type = strdup("BOOL");
     }
-#line 1825 "parser.tab.c"
+#line 1839 "parser.tab.c"
     break;
 
   case 53: /* expression: BOOL_FAUX  */
-#line 521 "parser.y"
+#line 535 "parser.y"
                 {
         char* temp = new_temp();
         insererQuadruplet(":=", "false", "", temp);
@@ -1833,11 +1847,11 @@ yyreduce:
         (yyval.expr_info).addr = temp;
         (yyval.expr_info).type = strdup("BOOL");
     }
-#line 1837 "parser.tab.c"
+#line 1851 "parser.tab.c"
     break;
 
   case 54: /* bool_expr: expression OP_EGAL expression  */
-#line 533 "parser.y"
+#line 547 "parser.y"
                                   {
         if(!is_numeric((yyvsp[-2].expr_info).type) || !is_numeric((yyvsp[0].expr_info).type)) {
             yyerror("Comparaison == sur types non numériques");
@@ -1848,11 +1862,11 @@ yyreduce:
         (yyval.expr_info).type = strdup("BOOL");
         insererQuadruplet("==", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1852 "parser.tab.c"
+#line 1866 "parser.tab.c"
     break;
 
   case 55: /* bool_expr: expression OP_DIFF expression  */
-#line 544 "parser.y"
+#line 558 "parser.y"
                                     {
         if(!is_numeric((yyvsp[-2].expr_info).type) || !is_numeric((yyvsp[0].expr_info).type)) {
             yyerror("Comparaison != sur types non numériques");
@@ -1863,11 +1877,11 @@ yyreduce:
         (yyval.expr_info).type = strdup("BOOL");
         insererQuadruplet("!=", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1867 "parser.tab.c"
+#line 1881 "parser.tab.c"
     break;
 
   case 56: /* bool_expr: expression OP_INF expression  */
-#line 555 "parser.y"
+#line 569 "parser.y"
                                    {
         if(!is_numeric((yyvsp[-2].expr_info).type) || !is_numeric((yyvsp[0].expr_info).type)) {
             yyerror("Comparaison < sur types non numériques");
@@ -1878,41 +1892,41 @@ yyreduce:
         (yyval.expr_info).type = strdup("BOOL");
         insererQuadruplet("<", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1882 "parser.tab.c"
+#line 1896 "parser.tab.c"
     break;
 
   case 57: /* bool_expr: expression OP_INF_EGAL expression  */
-#line 566 "parser.y"
+#line 580 "parser.y"
                                         {
         (yyval.expr_info).addr = new_temp();
         (yyval.expr_info).type = strdup("BOOL");
         insererQuadruplet("<=", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1892 "parser.tab.c"
+#line 1906 "parser.tab.c"
     break;
 
   case 58: /* bool_expr: expression OP_SUP expression  */
-#line 572 "parser.y"
+#line 586 "parser.y"
                                    {
         (yyval.expr_info).addr = new_temp();
         (yyval.expr_info).type = strdup("BOOL");
         insererQuadruplet(">", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1902 "parser.tab.c"
+#line 1916 "parser.tab.c"
     break;
 
   case 59: /* bool_expr: expression OP_SUP_EGAL expression  */
-#line 578 "parser.y"
+#line 592 "parser.y"
                                         {
         (yyval.expr_info).addr = new_temp();
         (yyval.expr_info).type = strdup("BOOL");
         insererQuadruplet(">=", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1912 "parser.tab.c"
+#line 1926 "parser.tab.c"
     break;
 
   case 60: /* bool_expr: bool_expr OP_ET bool_expr  */
-#line 584 "parser.y"
+#line 598 "parser.y"
                                 {
         if(strcmp((yyvsp[-2].expr_info).type, "BOOL") != 0 || strcmp((yyvsp[0].expr_info).type, "BOOL") != 0) {
             yyerror("Opération ET sur types non booléens");
@@ -1923,11 +1937,11 @@ yyreduce:
         (yyval.expr_info).type = strdup("BOOL");
         insererQuadruplet("ET", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1927 "parser.tab.c"
+#line 1941 "parser.tab.c"
     break;
 
   case 61: /* bool_expr: bool_expr OP_OU bool_expr  */
-#line 595 "parser.y"
+#line 609 "parser.y"
                                 {
         if(strcmp((yyvsp[-2].expr_info).type, "BOOL") != 0 || strcmp((yyvsp[0].expr_info).type, "BOOL") != 0) {
             yyerror("Opération OU sur types non booléens");
@@ -1938,11 +1952,11 @@ yyreduce:
         (yyval.expr_info).type = strdup("BOOL");
         insererQuadruplet("OU", (yyvsp[-2].expr_info).addr, (yyvsp[0].expr_info).addr, (yyval.expr_info).addr);
     }
-#line 1942 "parser.tab.c"
+#line 1956 "parser.tab.c"
     break;
 
   case 62: /* bool_expr: OP_NON bool_expr  */
-#line 606 "parser.y"
+#line 620 "parser.y"
                        {
         if(strcmp((yyvsp[0].expr_info).type, "BOOL") != 0) {
             yyerror("Opération NON sur type non booléen");
@@ -1953,11 +1967,11 @@ yyreduce:
         (yyval.expr_info).type = strdup("BOOL");
         insererQuadruplet("NON", (yyvsp[0].expr_info).addr, "", (yyval.expr_info).addr);
     }
-#line 1957 "parser.tab.c"
+#line 1971 "parser.tab.c"
     break;
 
   case 63: /* bool_expr: BOOL_VRAI  */
-#line 617 "parser.y"
+#line 631 "parser.y"
                 {
         char* temp = new_temp();
         insererQuadruplet(":=", "true", "", temp);
@@ -1965,11 +1979,11 @@ yyreduce:
         (yyval.expr_info).addr = temp;
         (yyval.expr_info).type = strdup("BOOL");
     }
-#line 1969 "parser.tab.c"
+#line 1983 "parser.tab.c"
     break;
 
   case 64: /* bool_expr: BOOL_FAUX  */
-#line 625 "parser.y"
+#line 639 "parser.y"
                 {
         char* temp = new_temp();
         insererQuadruplet(":=", "false", "", temp);
@@ -1977,11 +1991,11 @@ yyreduce:
         (yyval.expr_info).addr = temp;
         (yyval.expr_info).type = strdup("BOOL");
     }
-#line 1981 "parser.tab.c"
+#line 1995 "parser.tab.c"
     break;
 
   case 65: /* bool_expr: IDENTIFICATEUR  */
-#line 633 "parser.y"
+#line 647 "parser.y"
                      {
         if(!is_declared((yyvsp[0].chaine))) {
             YYABORT;
@@ -1995,14 +2009,19 @@ yyreduce:
             YYABORT;
         }
         
+        /* ===== VÉRIFICATION D'INITIALISATION ===== */
+        if(!is_initialized((yyvsp[0].chaine))) {
+            YYABORT;
+        }
+        
         (yyval.expr_info).addr = (yyvsp[0].chaine);
         (yyval.expr_info).type = strdup("BOOL");
     }
-#line 2002 "parser.tab.c"
+#line 2021 "parser.tab.c"
     break;
 
 
-#line 2006 "parser.tab.c"
+#line 2025 "parser.tab.c"
 
       default: break;
     }
@@ -2195,7 +2214,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 651 "parser.y"
+#line 670 "parser.y"
 
 
 /* ==================== FONCTIONS AUXILIAIRES ==================== */
@@ -2211,6 +2230,7 @@ int main(int argc, char** argv) {
     
     printf("=================================================\n");
     printf("  ANALYSEUR COMPLET POUR LE LANGAGE SIMPL\n");
+    printf("  (avec vérification d'initialisation)\n");
     printf("=================================================\n\n");
     
     if(argc > 1) {
@@ -2232,10 +2252,10 @@ int main(int argc, char** argv) {
     printf("\n--- FIN DE L'ANALYSE ---\n");
     
     if(result == 0) {
-        printf("\n COMPILATION RÉUSSIE!\n\n");
+        printf("\n✅ COMPILATION RÉUSSIE!\n\n");
         print_symbol_table();
     } else {
-        printf("\n COMPILATION ÉCHOUÉE\n");
+        printf("\n❌ COMPILATION ÉCHOUÉE\n");
     }
     
     if(argc > 1) fclose(input_file);

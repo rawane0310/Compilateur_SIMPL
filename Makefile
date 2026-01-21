@@ -8,7 +8,7 @@ all:
 	gcc -Wall -g -c stack.c
 	gcc -Wall -g -c parser.tab.c
 	gcc -Wall -g -c lex.yy.c
-	gcc -Wall -g -o simpl_compiler parser.tab.c lex.yy.c symbol_table.c quadruplet.c stack.c -lfl -lm
+	gcc -Wall -g -o simpl_compiler parser.tab.c lex.yy.c symbol_table.c quadruplet.c stack.c -lm
 	@echo "Compilation terminee! Executable: simpl_compiler"
 
 test: all

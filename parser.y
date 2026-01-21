@@ -141,7 +141,7 @@ instruction:
     | boucle_tant_que
 ;
 
-/* ==================== AFFECTATION (SANS ; - réutilisable dans POUR) ==================== */
+/* ==================== AFFECTATION ==================== */
 affectation:
     IDENTIFICATEUR OP_AFFECTATION expression {
         if(!is_declared($1)) {
@@ -195,6 +195,8 @@ affectation:
         insererQuadruplet("+", $1, $3.addr, temp);
         insererQuadruplet("[]=", $6.addr, "", temp);
         
+        mark_initialized($1);
+        
         printf("[SEMANTIQUE] Affectation tableau: %s[%s] := %s\n", 
                $1, $3.addr, $6.addr);
     }
@@ -234,6 +236,8 @@ lecture:
         char* temp = new_temp();
         insererQuadruplet("+", $3, $5.addr, temp);
         insererQuadruplet("READ", "", "", temp);
+        
+        mark_initialized($3);
         
         printf("[LOG] Lecture tableau: LIRE(%s[%s])\n", $3, $5.addr);
     }
@@ -292,7 +296,7 @@ parties_sinon:
     } bloc_instructions
 ;
 
-/* ==================== BOUCLE POUR (CORRIGÉE) ==================== */
+/* ==================== BOUCLE POUR ==================== */
 boucle_pour:
     MC_POUR PAR_OUV affectation SEPARATEUR {
         char* label_test = new_label();
@@ -446,6 +450,11 @@ expression:
             YYABORT;
         }
         
+        /* ===== VÉRIFICATION D'INITIALISATION ===== */
+        if(!is_initialized($1)) {
+            YYABORT;
+        }
+        
         $$.addr = $1;
         $$.type = strdup(get_type($1));
     }
@@ -465,6 +474,11 @@ expression:
         
         if(strcmp($3.type, "ENTIER") != 0) {
             yyerror("L'indice d'un tableau doit être de type ENTIER");
+            YYABORT;
+        }
+        
+        /* ===== VÉRIFICATION D'INITIALISATION DU TABLEAU ===== */
+        if(!is_initialized($1)) {
             YYABORT;
         }
         
@@ -643,6 +657,11 @@ bool_expr:
             YYABORT;
         }
         
+        /* ===== VÉRIFICATION D'INITIALISATION ===== */
+        if(!is_initialized($1)) {
+            YYABORT;
+        }
+        
         $$.addr = $1;
         $$.type = strdup("BOOL");
     }
@@ -663,6 +682,7 @@ int main(int argc, char** argv) {
     
     printf("=================================================\n");
     printf("  ANALYSEUR COMPLET POUR LE LANGAGE SIMPL\n");
+    printf("  (avec vérification d'initialisation)\n");
     printf("=================================================\n\n");
     
     if(argc > 1) {
@@ -684,10 +704,10 @@ int main(int argc, char** argv) {
     printf("\n--- FIN DE L'ANALYSE ---\n");
     
     if(result == 0) {
-        printf("\n COMPILATION RÉUSSIE!\n\n");
+        printf("\n✅ COMPILATION RÉUSSIE!\n\n");
         print_symbol_table();
     } else {
-        printf("\n COMPILATION ÉCHOUÉE\n");
+        printf("\n❌ COMPILATION ÉCHOUÉE\n");
     }
     
     if(argc > 1) fclose(input_file);

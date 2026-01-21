@@ -1,0 +1,14 @@
+DEBUT_PROG
+
+DECLARER x : ENTIER ;
+## var non initialisé
+
+SI (x < 5) ALORS {
+    AFFICHER("Bonjour");
+}
+SINON {
+    AFFICHER("SALUt");
+}
+FIN_SI
+
+FIN_PROG
